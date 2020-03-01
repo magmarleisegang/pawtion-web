@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     pawtionInputs: {
         flex: 1,
         fontSize: '1.25em',
-        textAlign: 'right'
+        textAlign: 'right',
     },
     pawtionLabels: {
         flex: 1,
@@ -120,7 +120,7 @@ export default class PortionCalculator extends React.Component {
             <View style={{ height: '90vh' }}>
                 <View style={{ flex: 1 }}>
                     <Text>Price/Portion</Text>
-                    <Text style={{ fontSize: '2.5em' }}>{this.state.portionCost}</Text>
+                    <Text style={{ fontSize: '2.5em' }}>{this.state.portionCost.toFixed(2)}</Text>
                 </View>
                 <View style={{ flex: 0.5 }}>
                     <Button onPress={this.rememberMe}
@@ -134,7 +134,7 @@ export default class PortionCalculator extends React.Component {
                         <TextInput
                             style={[styles.pawtionInputs]}
                             placeholder="00.0"
-                            onChangeText={(text) => this.setState({ bag: parseFloat(text) }, this.calculatePortionCost)}
+                            value={this.state.bag.toFixed(2)}
                         />
                     </View>
                     <View style={[styles.pawtionInputRows]} onTouchEnd={()=>{this.isEditing = 'price';}}>
@@ -144,7 +144,7 @@ export default class PortionCalculator extends React.Component {
                         <TextInput
                             style={[styles.pawtionInputs]}
                             placeholder="00.0"
-                            onChangeText={(text) => this.setState({ price: parseFloat(text) }, this.calculatePortionCost)}
+                            value={this.state.price.toFixed(2)}
                         />
                     </View>
                     <View style={[styles.pawtionInputRows]} onTouchEnd={()=>{this.isEditing = 'portion';}}>
@@ -154,7 +154,7 @@ export default class PortionCalculator extends React.Component {
                         <TextInput
                             style={[styles.pawtionInputs]}
                             placeholder="00.0"
-                            onChangeText={(text) => this.setState({ portionSize: parseFloat(text) }, this.calculatePortionCost)}
+                            value={this.state.portionSize.toFixed(2)}
                         />
                     </View>
                 </View>
