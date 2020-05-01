@@ -43,7 +43,6 @@ export default class PortionCalculator extends React.Component {
         this.calculatePortionCost = this._calculatePortionCost.bind(this);
         this.rememberMe = this._rememberMe.bind(this);
         this.calculatorButtonPressed = this._calculatorButtonPressed.bind(this);
-        this.getCurrentEditingValue = this.getCurrentEditingValue.bind(this);
         this.getCurrentEditingText = this.getCurrentEditingText.bind(this);
         this.setCurrentEditingValue = this.setCurrentEditingValue.bind(this);
         this.isEditing = "bag"
@@ -88,21 +87,6 @@ export default class PortionCalculator extends React.Component {
         console.log(`new current value: ${currentText}`);
 
         this.setCurrentEditingValue(currentText);
-    }
-
-    getCurrentEditingValue() {
-        console.log(this.isEditing)
-        switch (this.isEditing) {
-            case "bag":
-                return this.state.bag;
-            case "price":
-                return this.state.price;
-            case "portion":
-                return this.state.portionSize;
-            default:
-                break;
-        }
-
     }
 
     getCurrentEditingText() {
