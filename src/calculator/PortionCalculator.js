@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
     buttons: {
 
     }
-
 })
 
 export default class PortionCalculator extends React.Component {
@@ -40,6 +39,8 @@ export default class PortionCalculator extends React.Component {
             }
         };
         this.calculatePortionCost = this._calculatePortionCost.bind(this);
+        this.canCalculatePortionCost = this._canCalculatePortionCost.bind(this);
+
         this.rememberMe = this._rememberMe.bind(this);
         this.calculatorButtonPressed = this._calculatorButtonPressed.bind(this);
         this.getCurrentEditingText = this.getCurrentEditingText.bind(this);
@@ -54,15 +55,17 @@ export default class PortionCalculator extends React.Component {
 
 
     _calculatePortionCost() {
-        if (this.state.price > 0
-            && this.state.bag > 0
-            && this.state.portionSize > 0) {
-
+        if (this.canCalculatePortionCost()) {
             const mealsPerBag = this.state.bag * 1000.00 / this.state.portionSize;
             const pricePerMeal = this.state.price / mealsPerBag;
             return pricePerMeal.toFixed(2);
         }
         return "0.00"
+    }
+    _canCalculatePortionCost() {
+        return this.state.price > 0
+            && this.state.bag > 0
+            && this.state.portionSize > 0
     }
 
     _calculatorButtonPressed(char) {
@@ -80,7 +83,6 @@ export default class PortionCalculator extends React.Component {
     }
 
     getCurrentEditingText() {
-        console.log(this.isEditing)
         switch (this.isEditing) {
             case "bag":
                 return this.state.Text.bag || "0";
@@ -112,7 +114,7 @@ export default class PortionCalculator extends React.Component {
     }
 
     _rememberMe() {
-        const  portionCost = parseFloat(this.calculatePortionCost())
+        const portionCost = parseFloat(this.calculatePortionCost())
         const currentValue = {
             bag: this.state.bag,
             price: this.state.price,
@@ -123,7 +125,6 @@ export default class PortionCalculator extends React.Component {
             this.props.onRememberMe(currentValue);
     }
 
-
     render() {
         return (
             <View style={{ height: '90vh' }}>
@@ -133,6 +134,7 @@ export default class PortionCalculator extends React.Component {
                 </View>
                 <View style={{ flex: 0.5 }}>
                     <Button onPress={this.rememberMe}
+                        disabled={!this.canCalculatePortionCost()}
                         title="Remember Me" />
                 </View>
                 <View style={{ padding: 10, flex: 1 }}>
