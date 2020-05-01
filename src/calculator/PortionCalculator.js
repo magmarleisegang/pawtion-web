@@ -33,15 +33,29 @@ export default class PortionCalculator extends React.Component {
             bag: 0.0,
             price: 0.0,
             portionSize: 0.0,
-            portionCost: 0.0
+            portionCost: 0.0,
+            Text: {
+                bag: "0",
+                price: "0",
+                portionSize: "0",
+            }
         };
         this.calculatePortionCost = this._calculatePortionCost.bind(this);
         this.rememberMe = this._rememberMe.bind(this);
         this.calculatorButtonPressed = this._calculatorButtonPressed.bind(this);
         this.getCurrentEditingValue = this.getCurrentEditingValue.bind(this);
+        this.getCurrentEditingText = this.getCurrentEditingText.bind(this);
         this.setCurrentEditingValue = this.setCurrentEditingValue.bind(this);
         this.isEditing = "bag"
+        this.actions = {
+            clear: "<",
+            zeros: ".00"
+        }
+
+        this.maintainZero = false;
     }
+
+
 
     _calculatePortionCost() {
         console.log("calculate portion cost");
@@ -57,27 +71,49 @@ export default class PortionCalculator extends React.Component {
 
     _calculatorButtonPressed(char) {
         console.log(char);
-        let currentValue = this.getCurrentEditingValue().toString();
-        console.log(`current value: ${currentValue}`);
+        let currentText = this.getCurrentEditingText();
 
-        if (char == "<") {
-            return;
-        } else {
-            currentValue += char;
+        console.log(`current value: ${currentText}`);
+
+        if (char === this.actions.clear) {
+            currentText = currentText.substring(0, currentText.length - 1)
         }
-        console.log(`new current value: ${currentValue}`);
-        this.setCurrentEditingValue(currentValue);
+        else if (char === this.actions.zeros) {
+            currentText += "00";
+        }
+        else {
+            currentText += char;
+
+        }
+        console.log(`new current value: ${currentText}`);
+
+        this.setCurrentEditingValue(currentText);
     }
 
     getCurrentEditingValue() {
         console.log(this.isEditing)
         switch (this.isEditing) {
             case "bag":
-                return this.state.bag;               
+                return this.state.bag;
             case "price":
-                return this.state.price;               
+                return this.state.price;
             case "portion":
-                return this.state.portionSize;               
+                return this.state.portionSize;
+            default:
+                break;
+        }
+
+    }
+
+    getCurrentEditingText() {
+        console.log(this.isEditing)
+        switch (this.isEditing) {
+            case "bag":
+                return this.state.Text.bag;
+            case "price":
+                return this.state.Text.price;
+            case "portion":
+                return this.state.Text.portionSize;
             default:
                 break;
         }
@@ -85,16 +121,19 @@ export default class PortionCalculator extends React.Component {
     }
 
     setCurrentEditingValue(val) {
+
+        let newFloatValue = parseFloat(val) / 100;
         switch (this.isEditing) {
             case "bag":
-                this.setState({ bag: parseFloat(val) });
+
+                this.setState({ bag: newFloatValue, Text: { bag: val } });
                 break;
             case "price":
-                this.setState({ price: parseFloat(val) });
+                this.setState({ price: newFloatValue, Text: { price: val } });
 
                 break;
             case "portion":
-                this.setState({ portionSize: parseFloat(val) });
+                this.setState({ portionSize: newFloatValue, Text: { portionSize: val } });
 
                 break;
             default:
@@ -127,7 +166,7 @@ export default class PortionCalculator extends React.Component {
                         title="Remember Me" />
                 </View>
                 <View style={{ padding: 10, flex: 1 }}>
-                    <View style={[styles.pawtionInputRows]} onTouchEnd={()=>{this.isEditing = 'bag';}}>
+                    <View style={[styles.pawtionInputRows]} onTouchEnd={() => { this.isEditing = 'bag'; }}>
                         <Text style={[styles.pawtionLabels]}>Bag Weight</Text>
                         <Text style={[styles.pawtionUnits]}>kg</Text>
 
@@ -137,7 +176,7 @@ export default class PortionCalculator extends React.Component {
                             value={this.state.bag.toFixed(2)}
                         />
                     </View>
-                    <View style={[styles.pawtionInputRows]} onTouchEnd={()=>{this.isEditing = 'price';}}>
+                    <View style={[styles.pawtionInputRows]} onTouchEnd={() => { this.isEditing = 'price'; }}>
 
                         <Text style={[styles.pawtionLabels]}>Bag Price</Text>
                         <Text style={[styles.pawtionUnits]}>R</Text>
@@ -147,7 +186,7 @@ export default class PortionCalculator extends React.Component {
                             value={this.state.price.toFixed(2)}
                         />
                     </View>
-                    <View style={[styles.pawtionInputRows]} onTouchEnd={()=>{this.isEditing = 'portion';}}>
+                    <View style={[styles.pawtionInputRows]} onTouchEnd={() => { this.isEditing = 'portion'; }}>
                         <Text style={[styles.pawtionLabels]}>Portion Size</Text>
                         <Text style={[styles.pawtionUnits]}>g</Text>
 
@@ -176,7 +215,7 @@ export default class PortionCalculator extends React.Component {
                         <CalculatorButton Number={9} style={{ flex: 1 }} onPressed={this.calculatorButtonPressed} />
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly' }}>
-                        <CalculatorButton Number={'.'} style={{ flex: 1 }} onPressed={this.calculatorButtonPressed} />
+                        <CalculatorButton Number={'.00'} style={{ flex: 1 }} onPressed={this.calculatorButtonPressed} />
                         <CalculatorButton Number={0} style={{ flex: 1 }} onPressed={this.calculatorButtonPressed} />
                         <CalculatorButton Number={'<'} style={{ flex: 1 }} onPressed={this.calculatorButtonPressed} />
                     </View>
