@@ -142,19 +142,19 @@ export default class PortionCalculator extends React.Component {
     render() {
         return (
             <View style={{ height: '90vh' }}>
-                <View style={{ flex: 1 }}>
+                <View>
                     <Text>Price/Portion</Text>
                     {this.canCalculatePortionCost() &&
                         <Text style={{ fontSize: '2.5em' }}>{this.calculatePortionCost()}</Text>}
                     {!this.canCalculatePortionCost() &&
                         <Text style={{ fontSize: '1.5em', paddingTop: '5px' }}>Add bag/price/portion</Text>}
                 </View>
-                <View style={{ flex: 0.5 }}>
+                <View>
                     <Button onPress={this.rememberMe}
                         disabled={!this.canCalculatePortionCost()}
                         title="Remember Me" />
                 </View>
-                <View style={{ flex: 1 }}>
+                <View >
                     <View style={[styles.pawtionInputRows, this.state.isEditing === "bag" && styles.pawtionActiveInput]}
                         onTouchEnd={() => this.onChangeEditing("bag")}>
                         <Text style={[styles.pawtionLabels]}>Bag Weight</Text>
@@ -189,7 +189,7 @@ export default class PortionCalculator extends React.Component {
                         </Text>
                     </View>
                 </View>
-                <View style={{ justifyContent: 'space-evenly', flex: 4 }}>
+                <View style={{ justifyContent: 'space-evenly' }}>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly' }}>
                         <CalculatorButton Number={1} style={{ flex: 1 }} onPressed={this.calculatorButtonPressed} />
                         <CalculatorButton Number={2} style={{ flex: 1 }} onPressed={this.calculatorButtonPressed} />
