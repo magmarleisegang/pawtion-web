@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TextInput, Button, View, StyleSheet } from 'react-native';
+import { Text, Button, View, StyleSheet } from 'react-native';
 import CalculatorButton from './CalculatorButton'
 
 const styles = StyleSheet.create({
@@ -41,7 +41,8 @@ export default class PortionCalculator extends React.Component {
                 bag: "0",
                 price: "0",
                 portionSize: "0",
-            }
+            },
+            isEditing: "bag"
         };
         this.calculatePortionCost = this._calculatePortionCost.bind(this);
         this.canCalculatePortionCost = this._canCalculatePortionCost.bind(this);
@@ -50,7 +51,8 @@ export default class PortionCalculator extends React.Component {
         this.calculatorButtonPressed = this._calculatorButtonPressed.bind(this);
         this.getCurrentEditingText = this.getCurrentEditingText.bind(this);
         this.setCurrentEditingValue = this.setCurrentEditingValue.bind(this);
-        this.isEditing = "bag"
+        this.onChangeEditing = this._onChangeEditing.bind(this);
+        // this.isEditing = "bag"
         this.actions = {
             clear: "<",
             zeros: "00"
@@ -87,7 +89,9 @@ export default class PortionCalculator extends React.Component {
     }
 
     getCurrentEditingText() {
-        switch (this.isEditing) {
+        const isEditing = this.state.isEditing;
+
+        switch (isEditing) {
             case "bag":
                 return this.state.Text.bag || "0";
             case "price":
@@ -101,8 +105,8 @@ export default class PortionCalculator extends React.Component {
 
     setCurrentEditingValue(val) {
         let newFloatValue = parseFloat(val) / 100;
-
-        switch (this.isEditing) {
+        const isEditing = this.state.isEditing;
+        switch (isEditing) {
             case "bag":
                 this.setState({ bag: newFloatValue, Text: { bag: val } });
                 break;
@@ -129,6 +133,12 @@ export default class PortionCalculator extends React.Component {
             this.props.onRememberMe(currentValue);
     }
 
+    _onChangeEditing(isEditing) {
+        if (this.state.isEditing !== isEditing) {
+            this.setState({ isEditing: isEditing });
+        }
+    }
+
     render() {
         return (
             <View style={{ height: '90vh' }}>
@@ -145,38 +155,38 @@ export default class PortionCalculator extends React.Component {
                         title="Remember Me" />
                 </View>
                 <View style={{ flex: 1 }}>
-                    <View style={[styles.pawtionInputRows, this.isEditing === "bag" && styles.pawtionActiveInput]}
-                        onTouchEnd={() => { this.isEditing = 'bag'; }}>
+                    <View style={[styles.pawtionInputRows, this.state.isEditing === "bag" && styles.pawtionActiveInput]}
+                        onTouchEnd={() => this.onChangeEditing("bag")}>
                         <Text style={[styles.pawtionLabels]}>Bag Weight</Text>
                         <Text style={[styles.pawtionUnits]}>kg</Text>
 
-                        <TextInput
+                        <Text
                             style={[styles.pawtionInputs]}
-                            placeholder="00.0"
-                            value={this.state.bag.toFixed(2)}
-                        />
+                            placeholder="00.0">
+                            {this.state.bag.toFixed(2)}
+                        </Text>
                     </View>
-                    <View style={[styles.pawtionInputRows, this.isEditing === "price" && styles.pawtionActiveInput]}
-                        onTouchEnd={() => { this.isEditing = 'price'; }}>
+                    <View style={[styles.pawtionInputRows, this.state.isEditing === "price" && styles.pawtionActiveInput]}
+                        onTouchEnd={() => this.onChangeEditing("price")}>
 
                         <Text style={[styles.pawtionLabels]}>Bag Price</Text>
                         <Text style={[styles.pawtionUnits]}>R</Text>
-                        <TextInput
+                        <Text
                             style={[styles.pawtionInputs]}
-                            placeholder="00.0"
-                            value={this.state.price.toFixed(2)}
-                        />
+                            placeholder="00.0">
+                            {this.state.price.toFixed(2)}
+                        </Text>
                     </View>
-                    <View style={[styles.pawtionInputRows, this.isEditing === "portion" && styles.pawtionActiveInput]}
-                        onTouchEnd={() => { this.isEditing = 'portion'; }}>
+                    <View style={[styles.pawtionInputRows, this.state.isEditing === "portion" && styles.pawtionActiveInput]}
+                        onTouchEnd={() => this.onChangeEditing("portion")}>
                         <Text style={[styles.pawtionLabels]}>Portion Size</Text>
                         <Text style={[styles.pawtionUnits]}>g</Text>
 
-                        <TextInput
+                        <Text
                             style={[styles.pawtionInputs]}
-                            placeholder="00.0"
-                            value={this.state.portionSize.toFixed(2)}
-                        />
+                            placeholder="00.0">
+                            {this.state.portionSize.toFixed(2)}
+                        </Text>
                     </View>
                 </View>
                 <View style={{ justifyContent: 'space-evenly', flex: 4 }}>
